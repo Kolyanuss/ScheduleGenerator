@@ -1,6 +1,6 @@
 ﻿namespace ScheduleLogic
 {
-    public class Teacher
+    public class Group
     {
     }
 }

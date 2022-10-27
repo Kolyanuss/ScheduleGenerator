@@ -3,8 +3,8 @@
     public class Core
     {
         List<Teacher> teachers;
-        List<string> groups;
-        List<string> lessons;
-        List<string> audiences;
+        List<Group> groups;
+        List<Audience> audiences;
+        List<Lesson> lessons;
     }
 }
