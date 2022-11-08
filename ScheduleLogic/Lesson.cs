@@ -15,6 +15,7 @@
         /// The amount of all work of the student (in hours)
         /// </summary>
         public int amountOfWork { get { return amountOfWork_lecture + amountOfWork_practics; } }
+        public bool isLecture = true;
 
         public Lesson()
         {
