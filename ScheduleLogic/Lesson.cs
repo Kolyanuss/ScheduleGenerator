@@ -3,29 +3,32 @@
     public class Lesson
     {
         public string name;
-        /// <summary>
-        /// The amount of work (lecture) of the student (in hours)
-        /// </summary>
-        public int amountOfWork_lecture;
-        /// <summary>
-        /// The amount of work (pratics) of the student (in hours)
-        /// </summary>
-        public int amountOfWork_practics;
-        /// <summary>
-        /// The amount of all work of the student (in hours)
-        /// </summary>
-        public int amountOfWork { get { return amountOfWork_lecture + amountOfWork_practics; } }
+        public int numberClassesPerWeek_lecture;
+        public int numberClassesPerWeek_practics;
+        public int amountOfWork { get { return numberClassesPerWeek_lecture + numberClassesPerWeek_practics; } }
         public bool isLecture = true;
+        public Specification requiredClass;
 
         public Lesson()
         {
             name = "";
         }
-        public Lesson(string name, int amountOfWork_lecture, int amountOfWork_practics)
+        public Lesson(string name, int numClassesPerWeek_lec, int numClassesPerWeek_pract)
         {
             this.name = name;
-            this.amountOfWork_lecture = amountOfWork_lecture;
-            this.amountOfWork_practics = amountOfWork_practics;
+            numberClassesPerWeek_lecture = numClassesPerWeek_lec;
+            numberClassesPerWeek_practics = numClassesPerWeek_pract;
+            requiredClass = Specification.Ordinary;
+        }
+        public Lesson(string name,
+                      int numClassesPerWeek_lec,
+                      int numClassesPerWeek_pract,
+                      bool isLecture,
+                      Specification requiredClass)
+            : this(name, numClassesPerWeek_lec, numClassesPerWeek_pract)
+        {
+            this.isLecture = isLecture;
+            this.requiredClass = requiredClass;
         }
     }
 }

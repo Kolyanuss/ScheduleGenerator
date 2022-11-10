@@ -6,8 +6,6 @@
         public HashSet<Group> groups;
         public HashSet<Audience> audiences;
         public HashSet<Lesson> lessons;
-        public HashSet<Teacher> freeTeachers;
-        public HashSet<Audience> freeAudiences;
 
         public int countOfWorkingDay = 5;
         public int countOfMaxClassesInDay = 6;
@@ -24,7 +22,7 @@
             audiences = new HashSet<Audience>();
             lessons = new HashSet<Lesson>();
             listLessonForGroup = new Dictionary<Group, HashSet<Lesson>>();
-            shedule = new List<Dictionary<Group, Classes>>();
+            shedule = new Dictionary<Group, List<Classes>>();
         }
 
         public Core(HashSet<Teacher> teachers,
@@ -37,7 +35,7 @@
             this.audiences = audiences;
             this.lessons = lessons;
             listLessonForGroup = new Dictionary<Group, HashSet<Lesson>>();
-            shedule = new List<Dictionary<Group, Classes>>();
+            shedule = new Dictionary<Group, List<Classes>>();
         }
 
         public Core(HashSet<Teacher> teachers,
@@ -49,9 +47,15 @@
             => this.listLessonForGroup = listLessonForGroup;
         #endregion
 
-        private Teacher? GetFreeTeacher(Lesson requiredLesson)
+        private Lesson ChooseLesson()
+        { // todo: add code for chose lesson
+            item.Value.FirstOrDefault();
+            return;
+        }
+
+        private Teacher GetFreeTeacher(Lesson requiredLesson)
         {
-            foreach (var teacher1 in freeTeachers)
+            foreach (var teacher1 in teachers)
             {
                 foreach (var lesson1 in teacher1.lessonsToTeach)
                 {
@@ -61,38 +65,50 @@
                     }
                 }
             }
-            return null;
+            throw new ArgumentException("Не хватає вільних вчителів");
+        }
+
+        private Audience GetFreeAudience(Specification specification = Specification.Ordinary)
+        {
+            var result = audiences.FirstOrDefault();
+            if (result == null)
+            {
+                throw new ArgumentException("Не хватає вільних аудиторій");
+            }
+            return result;
         }
 
         private Classes? GenerateClasses()
+        // 1 choose lesson
+        // 2 get free teacher
+        // 3 get freee audience
         {
-            var currentLesson = item.Value.FirstOrDefault();
+            var currentLesson = ChooseLesson();
             if (currentLesson == null)
             {
                 return null;
             }
             var currentTeacher = GetFreeTeacher(currentLesson);
-            if (currentTeacher == null)
-            {
-                throw new ArgumentException("Не хватає вільних вчителів");
-            }
+            var currentAudience = GetFreeAudience();
 
-            return new Classes(currentTeacher, currentLesson, freeAudiences.FirstOrDefault()); 
+            return new Classes(currentTeacher, currentLesson, currentAudience);
         }
 
         public Dictionary<Group, List<Classes>> GenerateShedule()
         {
             shedule = new Dictionary<Group, List<Classes>>();
-                        
+
             foreach (var item in listLessonForGroup)
             {
-                // to do: add logic \ cycle
-                var currentClasses = GenerateClasses();
-                if (currentClasses == null)
+                List<Classes> allClassesForWeek = new List<Classes>();
+                for (int i = 0; i < countOfWorkingDay; i++)
                 {
-                    continue;
+                    for (int j = 0; j < countOfMaxClassesInDay; j++)
+                    {
+                        allClassesForWeek.Add(GenerateClasses());
+                    }
                 }
-                shedule.Add(item.Key, currentClasses);
+                shedule.Add(item.Key, allClassesForWeek);
             }
 
             return shedule;
