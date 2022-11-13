@@ -78,7 +78,7 @@
             return result;
         }
 
-        private Classes? GenerateClasses()
+        private Classes? GenerateClasses(Group group)
         // 1 choose lesson
         // 2 get free teacher
         // 3 get freee audience
@@ -100,12 +100,18 @@
 
             foreach (var item in listLessonForGroup)
             {
+                int countOfAllClassForWeek = 0;
+                foreach (var item2 in item.Value)
+                {
+                    countOfAllClassForWeek += item2.amountOfWork;
+                }
+                int avgCountOfClassInDay = countOfAllClassForWeek / countOfWorkingDay;
                 List<Classes> allClassesForWeek = new List<Classes>();
                 for (int i = 0; i < countOfWorkingDay; i++)
                 {
                     for (int j = 0; j < countOfMaxClassesInDay; j++)
                     {
-                        allClassesForWeek.Add(GenerateClasses());
+                        allClassesForWeek.Add(GenerateClasses(item.Key));
                     }
                 }
                 shedule.Add(item.Key, allClassesForWeek);
